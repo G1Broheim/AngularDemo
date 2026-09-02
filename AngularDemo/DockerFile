@@ -1,0 +1,18 @@
+# Stage 1: Build
+FROM node:26-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build -- --configuration=production
+
+# Stage 2: Serve with Nginx
+FROM nginx:alpine
+# This wildcard ensures it grabs files regardless of your exact app name folder
+COPY --from=build /app/dist/*/browser/ /usr/share/nginx/html/
+# Fallback if your version of Angular doesn't use the /browser subfolder
+COPY --from=build /app/dist/*/ /usr/share/nginx/html/
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
