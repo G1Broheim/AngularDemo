@@ -1,5 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+
+interface WeatherForecast {
+  date: string;
+  temperatureC: number;
+  temperatureF: number;
+  summary: string;
+}
 
 @Component({
   imports: [RouterOutlet],
@@ -7,6 +15,12 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
-export class App {
-  protected readonly title = signal('AngularDemo');
+export class App implements OnInit {
+  private http = inject(HttpClient);
+  forecasts = signal<WeatherForecast[]>([]);
+
+  ngOnInit() {
+    this.http.get<WeatherForecast[]>('/WeatherForecast')
+      .subscribe(data => this.forecasts.set(data));
+  }
 }
