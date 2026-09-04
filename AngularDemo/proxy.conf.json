@@ -1,6 +1,6 @@
 {
   "/WeatherForecast": {
-    "target": "http://localhost:5144",
+    "target": "http://localhost:5000",
     "secure": false,
     "changeOrigin": true
   }
