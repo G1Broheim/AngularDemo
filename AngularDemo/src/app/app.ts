@@ -1,13 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-
-interface WeatherForecast {
-  date: string;
-  temperatureC: number;
-  temperatureF: number;
-  summary: string;
-}
+import { WeatherHubService } from './services/weather-hub.service';
 
 @Component({
   imports: [RouterOutlet],
@@ -16,11 +9,9 @@ interface WeatherForecast {
   templateUrl: './app.html',
 })
 export class App implements OnInit {
-  private http = inject(HttpClient);
-  forecasts = signal<WeatherForecast[]>([]);
+  constructor(public weatherHubService: WeatherHubService) {}
 
-  ngOnInit() {
-    this.http.get<WeatherForecast[]>('/WeatherForecast')
-      .subscribe(data => this.forecasts.set(data));
+  ngOnInit(): void {
+    this.weatherHubService.startConnection();
   }
 }
