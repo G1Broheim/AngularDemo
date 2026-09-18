@@ -1,17 +1,21 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
 import { WeatherHubService } from './services/weather-hub.service';
+import { httpResource} from '@angular/common/http';
+import { WeatherForecast } from './models/weather-forecast';
 
 @Component({
-  imports: [RouterOutlet],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
 export class App implements OnInit {
-  constructor(public weatherHubService: WeatherHubService) {}
+  weatherHubService = inject(WeatherHubService);
+
+  // api fetch from a resource
+  forecastApiResource = httpResource<WeatherForecast[]>(() => `/WeatherForecast`, {});
 
   ngOnInit(): void {
+    // start the hub connection in ngOnInit
     this.weatherHubService.startConnection();
   }
 }

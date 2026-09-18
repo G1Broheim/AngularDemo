@@ -1,8 +1,8 @@
-import { Injectable, signal, Signal, WritableSignal } from '@angular/core';
+import { Service, signal, WritableSignal } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { WeatherForecast } from '../models/weather-forecast';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WeatherHubService {
     private hubConnection!: signalR.HubConnection;
     public latestForecast: WritableSignal<WeatherForecast[]> = signal([]);
